@@ -24,6 +24,9 @@ export default CardList;
 const styles = StyleSheet.create({
     contentContainer: {
         padding: 16,
-        justifyContent: 'center'
+        rowGap: 12,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start'
     }
 });

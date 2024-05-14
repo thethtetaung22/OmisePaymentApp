@@ -1,7 +1,7 @@
 
 export interface CardInterface {
-    number: String,
-    name: String,
-    exiryDate: String,
-    cvv: String
+    number: string,
+    name: string,
+    exiryDate: string,
+    cvv: string
 }

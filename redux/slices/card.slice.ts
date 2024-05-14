@@ -6,13 +6,26 @@ type StateType = {
 }
 
 const initialState: StateType = {
-    cards: []
-    // [{
-    //     name: 'Thet Htet Aung',
-    //     number: '1234 5678 9012 1234',
-    //     exiryDate: '12/28',
-    //     cvv: '123'
-    // }]
+    cards: [
+        {
+            name: 'Albert Mante',
+            number: '5344628069099069',
+            exiryDate: '04/29',
+            cvv: '138'
+        },
+        {
+            name: "Dan Jerde",
+            number: "4786538573296952",
+            exiryDate: "05/27",
+            cvv: "075"
+        },
+        {
+            name: "Chester Wiegand",
+            number: "3528306186278105",
+            exiryDate: "12/29",
+            cvv: "225"
+        },
+    ]
 };
 
 const cardSlice = createSlice({
@@ -20,7 +33,7 @@ const cardSlice = createSlice({
     initialState,
     reducers: {
         addCard(state: any, action: any) {
-            state.countryAndRegion = action?.payload;
+            state.cards = action?.payload;
         },
     }
 });

@@ -12,7 +12,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     const [loaded] = useFonts({
-        "FC-Subject-Rounded-Bold": require('../assets/fonts/FC-Subject-Rounded-Bold.ttf'),
+        "FC-Subject-Rounded-Regular": require('../assets/fonts/FC-Subject-Rounded-Regular.ttf'),
     });
 
     useEffect(() => {
@@ -31,7 +31,7 @@ export default function RootLayout() {
                 screenOptions={({ route }: any) => ({
                     headerTitleAlign: 'center',
                     headerTitleStyle: {
-                        fontFamily: 'FC-Subject-Rounded-Bold'
+                        fontFamily: 'FC-Subject-Rounded-Regular'
                     },
                     headerRight: () => {
                         switch (route.name) {

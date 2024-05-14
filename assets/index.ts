@@ -1,11 +1,9 @@
 
 export const asstes = {
     images: {
-        creditCard: require('./images/credit-card.png')
+        creditCard: require('./images/credit-card.png'),
+        jcbCard: require('./images/jcb.png'),
+        mastercard: require('./images/mastercard.png'),
+        visaCard: require('./images/visa.png'),
     },
-    svgs: {
-        jcbCardSvg: require('./svgs/jcbcard.svg'),
-        masterCardSvg: require('./svgs/mastercard.svg'),
-        visaCardSvg: require('./svgs/visa.svg'),
-    }
 }
