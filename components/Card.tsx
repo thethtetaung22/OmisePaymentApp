@@ -1,14 +1,18 @@
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native'
 import React from 'react'
 import { CardInterface } from '../constants/interfaces'
 import { asstes } from '../assets';
 import useCardNumberValidate from '../hooks/useCardNumberValidate';
+import { createCharge } from '../utils/Omise';
+import { useMyContext } from '../context/MainContext';
 
 interface Props {
     card: CardInterface
 }
 
 const Card = ({ card }: Props) => {
+    const { setIsLoading, setIsPaymentSuccess } = useMyContext();
+
     const { cardType, lastFourDigit } = useCardNumberValidate(card.number);
 
     const getCardImage = (cardType: any) => {
@@ -19,9 +23,24 @@ const Card = ({ card }: Props) => {
             default: null;
         }
     }
-    
+
+    const handlePress = async () => {
+        try {
+            setIsLoading(true);
+            const randomAmount = Math.ceil(Math.random() * 1000) + 5000;
+
+            const result = await createCharge(card, randomAmount);
+            if (result?.id) {
+                setIsLoading(false);
+                setIsPaymentSuccess(true);
+            }
+        } catch (error) {
+            Alert.alert('Error:' + JSON.stringify(error));
+        }
+    }
+
     return (
-        <View style={[styles.card, styles.elevation]}>
+        <TouchableOpacity onPress={handlePress} style={[styles.card, styles.elevation]}>
             {
                 getCardImage(cardType) &&
                 <Image width={200} source={getCardImage(cardType)} />
@@ -40,10 +59,10 @@ const Card = ({ card }: Props) => {
 
                 <View style={styles.nameWrapper}>
                     <Text style={[styles.numberText, styles.label]}>Expires</Text>
-                    <Text style={[styles.numberText, { color: '#202020' }]}>{card?.exiryDate}</Text>
+                    <Text style={[styles.numberText, { color: '#202020' }]}>{card?.expiryDate}</Text>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

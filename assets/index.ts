@@ -8,5 +8,6 @@ export const asstes = {
         verifiedByVisa: require('./images/verified-by-visa.png'),
         mastercardSecured: require('./images/mastercard-securecode.png'),
         omise: require('./images/omise.png'),
+        check: require('./images/check.png'),
     },
 }

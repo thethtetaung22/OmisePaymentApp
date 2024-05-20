@@ -1,17 +1,55 @@
-import { TouchableOpacity, StyleSheet, Text, TextInput, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import { Formik } from 'formik';
-import { asstes } from '../assets';
 import CardNumberInput from '../components/CardNumberInput';
+import { useDispatch } from 'react-redux';
+import * as Yup from "yup";
+import { addCard } from '../redux/slices/card.slice';
+import ExpiryDateInput from '../components/ExpiryDateInput';
+import CVVInput from '../components/CVVInput';
+import CardHolderNameInput from '../components/CardHolderNameInput';
+import { useNavigation } from 'expo-router';
+import { CardInterface } from '../constants/interfaces';
+import { createOmiseTokenId } from '../utils/Omise';
 
-export default function AddCard({
-    navigation
-}: Record<string, any>) {
+const CardSchema = Yup.object().shape({
+    name: Yup.string()
+        .min(2, 'Too Short!')
+        .max(70, 'Too Long!')
+        .required('Required'),
+    number: Yup.string()
+        .length(16, 'number must be 16 digits.')
+        .required('Required'),
+    expiryDate: Yup.string()
+        .min(3, 'Too Short!')
+        .max(5, 'too long')
+        .required('Required'),
+    cvv: Yup.string()
+        .min(3, 'Too Short!')
+        .max(4, 'Too Long!')
+        .required('Required'),
+});
 
-    const onSubmit = () => {
+export default function AddCard() {
+    const dispatch = useDispatch();
+    const navigation: any = useNavigation();
 
+    const onSubmit = async (values: CardInterface) => {
+        try {
+            if (values) {
+                const token = await createOmiseTokenId(values);
+
+                if (token) {
+                    dispatch(addCard({
+                        ...values,
+                        token,
+                    } as any));
+                    navigation.navigate('index')
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
-
-
 
     return (
         <View style={styles.container}>
@@ -23,54 +61,40 @@ export default function AddCard({
                     cvv: ''
                 }}
                 validateOnChange
-                validate={(values) => {
-                    console.log('Values:', values)
-                }}
-                onSubmit={values => console.log(values)}
+                validationSchema={CardSchema}
+                onSubmit={onSubmit}
             >
-                {({ handleChange, handleBlur, handleSubmit, values }) => (
+                {({ handleChange, handleSubmit, values, errors, touched }) => (
                     <View style={styles.formWrapper}>
                         <View style={{ flex: 1 }}>
 
-                            <CardNumberInput value={values.number} setValue={handleChange('number')} />
+                            <CardNumberInput
+                                value={values?.number}
+                                setValue={handleChange('number')}
+                                errors={errors}
+                                touched={touched}
+                            />
 
-                            <View style={styles.inputContainer}>
-                                <Text style={styles.inputLabel}>Name on card</Text>
-                                <TextInput
-                                    style={styles.textField}
-                                    placeholder="Ty Lee"
-                                    onChangeText={handleChange('name')}
-                                    onBlur={handleBlur('name')}
-                                    value={values.name}
-                                />
-                            </View>
+                            <CardHolderNameInput
+                                value={values?.name}
+                                setValue={handleChange('name')}
+                                errors={errors}
+                                touched={touched}
+                            />
 
                             <View style={styles.row}>
-                                <View style={[styles.inputContainer, { flex: 1 }]}>
-                                    <Text style={styles.inputLabel}>Expiry date</Text>
-
-                                    <TextInput
-                                        style={styles.textField}
-                                        placeholder="MM/YY"
-                                        onChangeText={handleChange('expiryDate')}
-                                        onBlur={handleBlur('expiryDate')}
-                                        value={values.expiryDate}
-                                    />
-                                </View>
-
-                                <View style={[styles.inputContainer, { flex: 1 }]}>
-                                    <Text style={styles.inputLabel}>CVV</Text>
-
-                                    <TextInput
-                                        style={styles.textField}
-                                        placeholder="012"
-                                        onChangeText={handleChange('cvv')}
-                                        onBlur={handleBlur('cvv')}
-                                        value={values.cvv}
-                                    // value={expiration}
-                                    // onChangeText={(text) => setExpiration(text)}
-                                    />
-                                </View>
+                                <ExpiryDateInput
+                                    value={values?.expiryDate}
+                                    setValue={handleChange('expiryDate')}
+                                    errors={errors}
+                                    touched={touched}
+                                />
+                                <CVVInput
+                                    value={values?.cvv}
+                                    setValue={handleChange('cvv')}
+                                    errors={errors}
+                                    touched={touched}
+                                />
                             </View>
 
                             <View style={styles.iconsWrapper}>

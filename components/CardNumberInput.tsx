@@ -3,16 +3,14 @@ import React from 'react';
 import useCardNumberValidate from '../hooks/useCardNumberValidate';
 import { asstes } from '../assets';
 import { restructureCardNumber } from '../utils/helpers';
-
-interface Props {
-    value: string;
-    setValue: (value: string) => void;
-}
+import { InputProps } from '../constants/interfaces';
 
 const CardNumberInput = ({
     value,
-    setValue
-}: Props) => {
+    setValue,
+    errors,
+    touched
+}: InputProps) => {
     const { cardType, isPotentiallyValid, isValid } = useCardNumberValidate(value);
 
     const getCardImage = (cardType: any) => {
@@ -32,8 +30,8 @@ const CardNumberInput = ({
         return (
             <View style={styles.iconsWrapper}>
                 {
-                    images.map(image => (
-                        <Image width={20} style={styles.smallIcon} source={image} />
+                    images.map((image, i) => (
+                        <Image key={i} width={20} style={styles.smallIcon} source={image} />
                     ))
                 }
             </View>
@@ -56,6 +54,11 @@ const CardNumberInput = ({
             {
                 (value?.length > 1 && (!isPotentiallyValid) || (value?.length >= 16 && !isValid)) &&
                 <Text style={[styles.inputLabel, styles.errorMessage]}>Invalid card number.</Text>
+            }
+            {
+                errors?.number && touched?.number ? (
+                    <Text style={[styles.inputLabel, { color: 'red', fontSize: 13 }]}>{errors?.number}</Text>
+                ) : null
             }
         </View>
     )
