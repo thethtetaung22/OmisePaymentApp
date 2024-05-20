@@ -19,6 +19,7 @@ const Card = ({ card }: Props) => {
             default: null;
         }
     }
+    
     return (
         <View style={[styles.card, styles.elevation]}>
             {

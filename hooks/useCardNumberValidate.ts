@@ -15,18 +15,25 @@ export default function useCardNumberValidate(cardNumber: string) {
     });
 
     useEffect(() => {
-        if (cardNumber?.length > 3) {
-            const lastFourDigit = cardNumber.substring(12, 16);
+        const validation = valid.number(cardNumber);
 
-            const validation = valid.number(cardNumber);
+        setResult({
+            isPotentiallyValid: validation.isPotentiallyValid,
+            isValid: validation.isValid,
+            cardType: validation.card?.type || '',
+            lastFourDigit: cardNumber.substring(12, 16)
+        });
+        // if (cardNumber?.length > 3) {
+        //     const lastFourDigit = ;
 
-            setResult({
-                isPotentiallyValid: validation.isPotentiallyValid,
-                isValid: validation.isValid,
-                cardType: validation.card?.type || '',
-                lastFourDigit
-            });
-        }
+        // } else {
+        //     setResult({
+        //         isPotentiallyValid: false,
+        //         isValid: false,
+        //         cardType: '',
+        //         lastFourDigit: ''
+        //     })
+        // }
     }, [cardNumber]);
 
     return result;
